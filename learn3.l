@@ -2,7 +2,7 @@
 
 .      匹配除了换行符以外的任意单一字符。
 []     character class，可以匹配方括号中的任意一个字符。
-			 如果第一个字符是^，则匹配除了方括号以内字符以外的任何字符。
+       如果第一个字符是^，则匹配除了方括号以内字符以外的任何字符。
        内部的-表示字符范围：0-9， a-z, A-Z。可以把-作为第一个字符放在[之后，这样字符类也包含它。
        以\开头的转义序列在[]中也会被识别，其他元字符则没有特殊含义。
 ^      如果是正则表达式的第一个字符就匹配行首。
@@ -43,54 +43,54 @@ $      如果是最后一个字符则匹配行尾。
 %option noyywrap
 
 %{
-	int chars = 0;
-	int words = 0;
-	int lines = 0;
+  int chars = 0;
+  int words = 0;
+  int lines = 0;
 %}
 
 %%
 
-helloworld			{printf("hello world\n");}
-hello					  {printf("hello\n");}
+helloworld      {printf("hello world\n");}
+hello           {printf("hello\n");}
 1               {
-									int c = input();
-									if(c != 0 && c == '2') {
-										printf("12!\n");
-									}
-									else {
-										printf("1 without 2!\n");
-									}
-									unput(c); 
-								}
-[a-zA-Z]+	{words++; chars += strlen(yytext);}
-\n  			{chars++; lines++;}
-.					{chars++;}
+                  int c = input();
+                  if(c != 0 && c == '2') {
+                    printf("12!\n");
+                  }
+                  else {
+                    printf("1 without 2!\n");
+                  }
+                  unput(c); 
+                }
+[a-zA-Z]+ {words++; chars += strlen(yytext);}
+\n        {chars++; lines++;}
+.         {chars++;}
 
 %%
 
 int main(int argc, char** argv) {
-	int i;
-	if(argc <  2) {
-		yylex();
-		printf("%8d%8d%8d\n", lines, words, chars);
-		return 0;
-	}
+  int i;
+  if(argc <  2) {
+    yylex();
+    printf("%8d%8d%8d\n", lines, words, chars);
+    return 0;
+  }
 
-	for(i = 1; i < argc; ++i) {
-		FILE* f = fopen(argv[i], "r");
+  for(i = 1; i < argc; ++i) {
+    FILE* f = fopen(argv[i], "r");
 
-		if(!f) {
-			perror(argv[i]);
-			return 1;
-		}
+    if(!f) {
+      perror(argv[i]);
+      return 1;
+    }
 /* 通过使用yyrestart重新打开文件并继续读取*/
-		yyrestart(f);
-		yylex();
-		fclose(f);
-		printf("%8d%8d%8d %s\n", lines, words, chars, argv[i]);
-		chars = 0;
-		words = 0;
-		lines = 0;
-	}
-	return 0; 
+    yyrestart(f);
+    yylex();
+    fclose(f);
+    printf("%8d%8d%8d %s\n", lines, words, chars, argv[i]);
+    chars = 0;
+    words = 0;
+    lines = 0;
+  }
+  return 0; 
 }

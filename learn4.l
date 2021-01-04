@@ -21,17 +21,17 @@
 
 
 ^"#"[ \t]*include[ \t]*[\"<] {BEGIN IFILE;}
-<IFILE>[^ \t\n\">]+  					{
-															  int c;
-																while((c = input()) && c != '\n');
-																printf("include file : %s\n", yytext);
-																++yylineno;
-																BEGIN INITIAL;
-													    }
+<IFILE>[^ \t\n\">]+           {
+                                int c;
+                                while((c = input()) && c != '\n');
+                                printf("include file : %s\n", yytext);
+                                ++yylineno;
+                                BEGIN INITIAL;
+                              }
 <IFILE>.|\n                   {
-															  fprintf(stderr, "bad include line\n");
-																yyterminate();
-															}
+                                fprintf(stderr, "bad include line\n");
+                                yyterminate();
+                              }
 ^.                         {printf("line : %d -> .", yylineno);}
 .                          {printf(".");}
 \n                         {printf("\n"); ++yylineno;}
@@ -39,12 +39,12 @@
 %%
 
 int main(int argc, char** argv) {
-	if(argc < 2) {
+  if(argc < 2) {
     fprintf(stderr, "need filename\n");
-	  return 1;
-	}
-	yyin = fopen(argv[1], "r");
-	yylex();
-	return 0;
+    return 1;
+  }
+  yyin = fopen(argv[1], "r");
+  yylex();
+  return 0;
 }
-	
+  
