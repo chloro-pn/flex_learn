@@ -9,16 +9,15 @@
 
 /* flex提供了一个叫做yylineno的变量记录行号,更新要自己更新 */
 %option nodefault
+
 /* 起始状态
  * 动态指定特定的模式匹配
  * flex本身定义INITIAL。
  * %x 独占， %s 包含
  */
-
 %x IFILE
 
 %%
-
 
 ^"#"[ \t]*include[ \t]*[\"<] {BEGIN IFILE;}
 <IFILE>[^ \t\n\">]+           {
@@ -36,6 +35,7 @@
 .                          {printf(".");}
 \n                         {printf("\n"); ++yylineno;}
 <<EOF>>                    {printf("end of file!\n"); yyterminate();}
+
 %%
 
 int main(int argc, char** argv) {

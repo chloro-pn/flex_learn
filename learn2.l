@@ -24,7 +24,6 @@
 %}
 
 %%
-
 "+" {return ADD;}
 "-" {return SUB;}
 "*" {return MUL;}
