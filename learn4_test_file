@@ -1,0 +1,9 @@
+#include "myhfile.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+	...
+  ..."#include <stdio.h> is necessary ..."
+  return 0;
+}
