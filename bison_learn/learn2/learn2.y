@@ -17,7 +17,7 @@
 }
 
 %token <d> NUMBER
-%token EOL EXIT
+%token EOL
 %type <a> exp factor term
 
 /* literal character
@@ -37,7 +37,6 @@ calclist:
 exp : factor
     | exp '+' factor { $$ = newop('+', $1, $3); }
     | exp '-' factor { $$ = newop('-', $1, $3); }
-    | EXIT { YYACCEPT; }
     ;
 
 factor : term
