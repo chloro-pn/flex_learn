@@ -10,13 +10,14 @@
  * 相应的值，默认情况下都是整数，但可以通过联合类型来
  * 为不同的语法符号指定不同的值类型
  */
+
 %union {
-  struct ast* a;
+  struct ast_node* a;
   double d;
 }
 
 %token <d> NUMBER
-%token EOL
+%token EOL EXIT
 %type <a> exp factor term
 
 /* literal character
@@ -34,20 +35,19 @@ calclist:
         ;
 
 exp : factor
-    | exp '+' factor { $$ = newast('+', $1, $3); }
-    | exp '-' factor { $$ = newast('-', $1, $3); }
+    | exp '+' factor { $$ = newop('+', $1, $3); }
+    | exp '-' factor { $$ = newop('-', $1, $3); }
+    | EXIT { YYACCEPT; }
     ;
 
 factor : term
-       | factor '*' term { $$ = newast('*', $1, $3); }
-       | factor '/' term { $$ = newast('/', $1, $3); }
+       | factor '*' term { $$ = newop('*', $1, $3); }
+       | factor '/' term { $$ = newop('/', $1, $3); }
        ;
 
 term : NUMBER { $$ = newnum($1); }
-     | '|' term { $$ = newast('|', $2, NULL); }
+     | '|' term { $$ = newop('|', $2, NULL); }
      | '(' exp ')' { $$ = $2; }
-     | '-' term { $$ = newast('M', $2, NULL); }
+     | '-' term { $$ = newop('M', $2, NULL); }
      ;
 %%
-
-

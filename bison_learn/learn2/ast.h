@@ -1,22 +1,32 @@
+#include <vector>
+#include <string>
+
+/* flex 提供  */
 extern int yylineno;
 
-void yyerror(char* s, ...);
+/* 需要自己实现，在tab.c中 */
+void yyerror(const char* s, ...);
 
-struct ast {
+/* flex提供 */
+int yylex();
+
+struct ast_node {
   int nodetype;
-  struct ast* l;
-  struct ast* r;
 };
 
-struct numval {
-  int nodetype;
+struct op_node : public ast_node {
+  struct ast_node* l;
+  struct ast_node* r;
+};
+
+struct numval : public ast_node {
   double number;
 };
 
-struct ast* newast(int nodetype, struct ast* l, struct ast* r);
-struct ast* newnum(double d);
+struct ast_node* newop(int nodetype, struct ast_node* l, struct ast_node* r);
+struct ast_node* newnum(double d);
 
-double eval(struct ast*);
+double eval(struct ast_node*);
 
-void treefree(struct ast*);
+void treefree(struct ast_node*);
 

@@ -3,8 +3,8 @@
 #include <stdarg.h>
 #include "ast.h"
 
-struct ast * newast(int nodetype, struct ast* l, struct ast* r) {
-  struct ast* a = malloc(sizeof(struct ast));
+struct ast_node* newop(int nodetype, struct ast_node* l, struct ast_node* r) {
+  struct op_node* a = new op_node;
   if(!a) {
     yyerror("out of space");
     exit(1);
@@ -15,21 +15,22 @@ struct ast * newast(int nodetype, struct ast* l, struct ast* r) {
   return a;
 }
 
-struct ast* newnum(double d) {
-  struct numval* a = malloc(sizeof(struct numval));
+struct ast_node* newnum(double d) {
+  struct numval* a = new numval;
   if(!a) {
     yyerror("out of space");
     exit(1);
   }
   a->nodetype = 'K';
   a->number = d;
-  return (struct ast*)a;
+  return a;
 }
 
-double eval(struct ast* a) {
+double eval(struct ast_node* an) {
   double v;
-  switch(a->nodetype) {
-    case 'K' : v = ((struct numval*)a)->number; break;
+  op_node* a = static_cast<op_node*>(an);
+  switch(an->nodetype) {
+    case 'K' : v = ((numval*)an)->number; break;
     case '+' : v = eval(a->l) + eval(a->r); break;
     case '-' : v = eval(a->l) - eval(a->r); break;
     case '*' : v = eval(a->l) * eval(a->r); break;
@@ -41,8 +42,9 @@ double eval(struct ast* a) {
   return v;
 }
 
-void treefree(struct ast* a) {
-  switch(a->nodetype) {
+void treefree(struct ast_node* an) {
+  op_node* a = static_cast<op_node*>(an);
+  switch(an->nodetype) {
     case '+' : 
     case '-' :
     case '*' :
@@ -52,19 +54,21 @@ void treefree(struct ast* a) {
     case 'M' :
       treefree(a->l);
     case 'K' : 
-      free(a);
+      free(an);
       break;
     default : printf("interval error : free bad node %c\n", a->nodetype);
   }
 }
 
-void yyerror(char* s, ...) {
+void yyerror(const char* s, ...) {
   va_list ap;
   va_start(ap, s);
   fprintf(stderr, "%d : error: ", yylineno);
   vfprintf(stderr, s, ap);
   fprintf(stderr, "\n");
 }
+
+ int yyparse();
 
 int main() {
   printf("> ");

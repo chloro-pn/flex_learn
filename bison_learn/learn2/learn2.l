@@ -8,7 +8,7 @@
 EXP ([Ee][-+]?[0-9]+)
 
 %%
-
+"exit" {return EXIT; yyterminate();}
 "+" |
 "-" |
 "*" |
