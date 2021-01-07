@@ -30,7 +30,7 @@ double eval(struct ast_node* an) {
   double v;
   op_node* a = static_cast<op_node*>(an);
   switch(an->nodetype) {
-    case 'K' : v = ((numval*)an)->number; break;
+    case 'K' : v = static_cast<numval*>(an)->number; break;
     case '+' : v = eval(a->l) + eval(a->r); break;
     case '-' : v = eval(a->l) - eval(a->r); break;
     case '*' : v = eval(a->l) * eval(a->r); break;
@@ -54,7 +54,7 @@ void treefree(struct ast_node* an) {
     case 'M' :
       treefree(a->l);
     case 'K' : 
-      free(an);
+      free(static_cast<numval*>(an));
       break;
     default : printf("interval error : free bad node %c\n", a->nodetype);
   }
@@ -72,5 +72,10 @@ void yyerror(const char* s, ...) {
 
 int main() {
   printf("> ");
-  return yyparse();
+  int ret = yyparse();
+  if(ret != 0) {
+    fprintf(stderr, "sth error.\n");
+    return 1;
+  }
+  return 0;
 }

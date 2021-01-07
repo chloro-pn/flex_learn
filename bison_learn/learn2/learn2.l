@@ -22,7 +22,7 @@ EXP ([Ee][-+]?[0-9]+)
 \n {return EOL;}
 "//".*
 [ \t]
-. {yyerror("mystery character %c\n", *yytext); }
+. {yyerror("mystery character %c\n", *yytext); yyterminate(); }
 %%
 
 
