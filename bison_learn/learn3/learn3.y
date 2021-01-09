@@ -34,17 +34,13 @@ basetype : INT
          | ID
          ;
 
-arraytype : array_type array
+arraytype : arraytype '[' NUM ']'
+          | basetype '[' NUM ']'
+          | pointertype '[' NUM ']'
           ;
 
-array_type : basetype
-           | arraytype
-           ;
-
-array : '[' NUM ']'
-      ;
-
 pointertype : basetype pp
+            | arraytype pp
             ;
 pp : '*' 
    | pp '*'
