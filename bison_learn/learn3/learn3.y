@@ -33,6 +33,7 @@ basetype : INT
 
 arraytype : type '[' ID ']'
           | type '[' NUM ']'
+          | type '[' ']'
           ;
 
 pointertype : type '*'
