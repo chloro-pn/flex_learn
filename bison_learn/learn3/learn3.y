@@ -15,11 +15,8 @@ stmtlist :
          | stmtlist stmt
          ;
 
-stmt : var_define_stmt ';'
+stmt : type ';'
      ;
-
-var_define_stmt : type ID
-                ;
 
 type : basetype      { printf("base type \n");}
      | arraytype     { printf("array type \n");}
@@ -34,25 +31,15 @@ basetype : INT
          | ID
          ;
 
-arraytype : arraytype '[' NUM ']'
-          | basetype '[' NUM ']'
-          | pointertype '[' NUM ']'
+arraytype : type '[' ID ']'
+          | type '[' NUM ']'
           ;
 
-pointertype : basetype pp
-            | arraytype pp
+pointertype : type '*'
             ;
-pp : '*' 
-   | pp '*'
-   ;
 
-functype :  '(' typelist ')' ARROW return_type
+functype :  type '(' typelist ')'
          ;
-
-return_type : basetype
-            | pointertype
-            | functype
-            ;
 
 typelist :
          | type
