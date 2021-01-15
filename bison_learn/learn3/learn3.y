@@ -6,7 +6,7 @@
   void yyerror(const char*);
 %}
 
-%token ID INT CHAR STRING BOOL TYPE_TOKEN 
+%token ID INT CHAR STRING BOOL TYPE_TOKEN FUNC_TOKEN 
 %token FOR WHILE IF ELSE
 %token NUM_LITERAL STR_LITERAL CHAR_LITERAL TRUE FALSE
 %token FUNC TYPE
@@ -55,7 +55,7 @@ literal : NUM_LITERAL
 expr_stmt : expr ';'
           ;
 
-func_define_stmt : FUNC ID '(' param_list ')' block_stmt
+func_define_stmt : FUNC type FUNC_TOKEN '(' param_list ')' block_stmt
                  ;
 
 param_list : 
